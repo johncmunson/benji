@@ -2,18 +2,20 @@ We're scoping out Benji, an agentic chatbot optimized for long-term investing. B
 
 Therefore, we do not need to concern ourselves with advanced topics like rate limiting, hardened security, or things of that nature. We can focus on the happy path and avoid over-engineering for the edge cases. With that said, we still want clean, organized code.
 
-Benji will run in the browser and offer a UX that could be described as ChatGPT-lite. json-render will be leveraged to enable **generative UI**, so that dynamic generative UI can be rendered on-the-fly and inlined into the chat history.
+Benji will run in the browser and offer a UX that could be described as ChatGPT-lite. **Eve as the durable agent execution engine** and **json-render as the generated presentation layer**.
 
-See the example apps provided by the json-render-docs-and-example-apps agent skill for a pretty good idea of what we're aiming for.
+It may be the case that we do not deterministically or programmatically call the Paper Trade API in all scenarios. Rather, it is likely that the agent will be performing this. Furthermore, the agent may even interact with our own database. The agent will be given access to skills and tools allowing it to carry out it's work and behave as a wealth manager and advisor.
+
+The agent should have a table in the database where it can save semi-structured portfolio strategy notes for each user or investor. These notes will be the north star guiding operations such as portfolio rebalancing, diversification, etc.
 
 Tech Stack:
 
 - Next.js
-- Tailwind
+- Tailwind + shadcn/ui
 - Drizzle ORM + Neon Postgres
-- json-render
+- json-render + eve
 - AI SDK + AI Gateway
-- Vitest
+- Vitest + Mock Service Worker + agent-browser
 
 ## Paper Trade API
 
