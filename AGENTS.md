@@ -40,3 +40,4 @@ Domain docs use a single-context layout. See `docs/agents/domain.md`.
 - Testing posture:
   - unit tests with mocked boundaries (HTTP, database) using vitest and mock-service-worker
   - manual smoke testing and sanity checks using agent-browser
+- To see an example of roughly the "app shell" or "app chrome" that we want, you can inspect the layouts and pages in the `~/dev-projects/wealth-manager/` project, paying particular attention to the Sidebar and SidebarInset.

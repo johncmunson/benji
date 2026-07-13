@@ -1,0 +1,3 @@
+# Use Eve for agent execution and json-render for generated presentation
+
+Benji uses Eve to own durable agent execution, including multi-turn history, tool loops, pauses, and streaming. Rich generated presentation crosses a single typed tool boundary as complete json-render specifications, while the application remains authoritative for identity, Chats, the Investment Strategy, the Brokerage Account, approvals, and side effects. The browser reaches Eve through a thin same-origin channel that authenticates with Better Auth, checks Chat ownership, and preserves Eve's JSON/NDJSON protocol. This avoids duplicating Eve's execution model or allowing generated UI to become an authority boundary.
