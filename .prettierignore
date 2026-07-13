@@ -1,0 +1,5 @@
+/.agents
+pnpm-lock.yaml
+/db/migrations
+/.pi
+/.next
