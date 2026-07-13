@@ -25,7 +25,7 @@ Domain docs use a single-context layout. See `docs/agents/domain.md`.
 - Use `pnpm` and/or `pnpx` as opposed to `npm` or `yarn`.
 - A dev server will always be running for you at `http://localhost:3000`
 - This project does not use CI. All testing, linting, and other checks are performed locally.
-- Available subagents: planner, reviewer, scout, and worker. Agent skill files might mention other subagent types. Map them to one of the available subagents (task dependent).
+- Available subagents: planner, reviewer, researcher, scout, and worker. Agent skill files might mention other subagent types. Map them to one of the available subagents (task dependent).
 - When launching `agent-browser` for this app, reuse the authenticated profile with `--profile ~/.agent-browser/profiles/wealth-manager`. Alert the user if you discover that the profile is no longer authenticated and coach them through restoring it:
   1. Have them sign in through their normal browser, then copy the `better-auth.session_token` value from DevTools → Application → Cookies → `http://localhost:3000`.
   2. Have them save only the value to `/tmp/wealth-manager-session-cookie` by running the following command: `bash -c 'umask 077; IFS= read -rsp "Paste session cookie value: " cookie && printf "%s" "$cookie" > /tmp/wealth-manager-session-cookie && printf "\nSaved.\n"'`
