@@ -37,3 +37,6 @@ Domain docs use a single-context layout. See `docs/agents/domain.md`.
 - Never write db migrations manually. Instead, modify the db schema in `db/schema/` and then run `pnpm db:generate`.
 - This project does not use CI. All testing, linting, and other checks are performed locally.
 - Make efforts to design responsive layouts, but do not go out of your way to support mobile. We do not claim to have strong support for mobile at this time.
+- Testing posture:
+  - unit tests with mocked boundaries (HTTP, database) using vitest and mock-service-worker
+  - manual smoke testing and sanity checks using agent-browser
