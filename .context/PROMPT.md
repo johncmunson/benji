@@ -19,40 +19,51 @@ Tech Stack:
 
 ## Paper Trade API
 
-Paper Trade is a private, synchronous server-to-server API for simulated long-term investing. Benji owns users, authentication, strategy, and presentation; Paper Trade receives an opaque `investorId` and owns one USD brokerage account per investor, including cash, positions, fills, realized gain/loss, and immutable activity.
+Paper Trade maintains one simulated Brokerage Account per Wealth Manager
+Investor and exposes on-demand Tradable Security data.
 
-### Capabilities and API surface
+## Authentication
 
-**Brokerage accounts**
+All business operations require the opaque shared service credential in an
+`Authorization: Bearer <credential>` header. The credential is not a JWT.
+`OPTIONS` and unsupported-method responses do not authenticate.
 
-| Method | Endpoint                                            | Purpose                                                  |
-| ------ | --------------------------------------------------- | -------------------------------------------------------- |
-| `POST` | `/api/investors/{investorId}/account`               | Create an account with `startingCashCents`               |
-| `GET`  | `/api/investors/{investorId}/account`               | Read cash, positions, cost basis, and realized gain/loss |
-| `POST` | `/api/investors/{investorId}/account/deposits`      | Deposit `amountCents` immediately                        |
-| `POST` | `/api/investors/{investorId}/account/withdrawals`   | Withdraw `amountCents` if cash is available              |
-| `POST` | `/api/investors/{investorId}/account/market-orders` | Submit `{ side, ticker, quantity }`                      |
-| `GET`  | `/api/investors/{investorId}/account/activities`    | Read bounded, newest-first account activity              |
+## Money and quantities
 
-Market orders support whole-share buys and sells of supported US-listed stocks and ETFs. They fill completely and synchronously at the latest usable Financial Datasets price—no pending orders, partial fills, margin, shorting, fees, or settlement delay.
+Monetary fields ending in `Cents` are integer cents. Share quantities are
+positive whole shares. Request values are restricted to JavaScript safe
+integers where stated.
 
-**Market data**
+## Idempotency
 
-| Method | Endpoint                                        | Purpose                                 |
-| ------ | ----------------------------------------------- | --------------------------------------- |
-| `GET`  | `/api/securities/{ticker}`                      | Exact, case-insensitive security lookup |
-| `GET`  | `/api/securities/{ticker}/quote`                | Current price snapshot                  |
-| `GET`  | `/api/securities/{ticker}/prices?start=…&end=…` | Daily historical OHLCV                  |
+Every account mutation requires `Idempotency-Key`. Keys are scoped to the
+exact Investor and retained with terminal results. Repeating the same key
+and normalized request replays the original status and body; reusing it for
+a different request returns `409 idempotency_conflict`.
 
-Market data is fetched on demand and is not persisted. Durable account reads therefore remain available if the market-data provider is unavailable, but valuation requires separate quote requests.
+## Method handling
 
-### Integration expectations
+Documented `HEAD` operations are provided by Next.js by invoking `GET` and
+suppressing the body. Unsupported exported methods return `405` with
+`{"error":{"code":"method_not_allowed","message":"Method not allowed."}}`
+and the same `Allow` value shown by the path's `OPTIONS` operation. These
+rejecting methods are intentionally omitted as OpenAPI operations.
 
-- Call only from the Benji backend using the shared bearer credential; secrets must never reach browsers.
-- Use Benji’s opaque `investorId` as the account identifier. There is no separate Paper Trade account ID.
-- Send an `Idempotency-Key` header on every mutation. Retrying the same key and payload returns the original result; changing the payload returns `409`.
-- Represent all money and prices as safe integer fields ending in `Cents`.
-- Expect atomic mutations and concurrency protection against overspending or overselling.
-- Expect trading only from 9:30 AM–4:00 PM America/New_York, Monday–Friday, subject to a development-only always-open override.
-- Handle errors as `{ "error": { "code": string, "message": string } }`, with stable codes and conventional `400`, `401`, `404`, `409`, `422`, and `503` statuses.
-- Treat `503` market-data failures as transient and retry safely with the same idempotency key.
+`OPTIONS` responses expose `Allow` only; they are not complete CORS
+preflight responses and emit no `Access-Control-Allow-*` headers.
+
+## Endpoints
+
+- `POST /api/investors/{investorId}/account` — Create a Brokerage Account.
+- `GET /api/investors/{investorId}/account` — Retrieve an account and its Positions.
+- `POST /api/investors/{investorId}/account/deposits` — Deposit cash into an account.
+- `POST /api/investors/{investorId}/account/withdrawals` — Withdraw available cash.
+- `GET /api/investors/{investorId}/account/activities` — List recent Account Activity.
+- `POST /api/investors/{investorId}/account/market-orders` — Execute a simulated Buy or Sell.
+- `GET /api/securities/{ticker}` — Look up a Tradable Security.
+- `GET /api/securities/{ticker}/quote` — Fetch the current quote.
+- `GET /api/securities/{ticker}/prices` — Fetch daily prices for an inclusive date range.
+
+## OpenAPI Specification
+
+[OpenAPI Specification](paper-trade.openapi.yaml)
