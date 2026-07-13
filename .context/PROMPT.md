@@ -4,6 +4,8 @@ Therefore, we do not need to concern ourselves with advanced topics like rate li
 
 Benji will run in the browser and offer a UX that could be described as ChatGPT-lite. **Eve as the durable agent execution engine** and **json-render as the generated presentation layer**.
 
+> [Eve + json-render + Next.js - Reference Architecture](../docs/architecture/eve-json-render-reference-architecture.md)
+
 It may be the case that we do not deterministically or programmatically call the Paper Trade API in all scenarios. Rather, it is likely that the agent will be performing this. Furthermore, the agent may even interact with our own database. The agent will be given access to skills and tools allowing it to carry out it's work and behave as a wealth manager and advisor.
 
 The agent should have a table in the database where it can save semi-structured portfolio strategy notes for each user or investor. These notes will be the north star guiding operations such as portfolio rebalancing, diversification, etc.
