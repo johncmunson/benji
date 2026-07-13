@@ -30,7 +30,8 @@ Domain docs use a single-context layout. See `docs/agents/domain.md`.
   1. Have them sign in through their normal browser, then copy the `better-auth.session_token` value from DevTools → Application → Cookies → `http://localhost:3000`.
   2. Have them save only the value to `/tmp/wealth-manager-session-cookie` by running the following command: `bash -c 'umask 077; IFS= read -rsp "Paste session cookie value: " cookie && printf "%s" "$cookie" > /tmp/wealth-manager-session-cookie && printf "\nSaved.\n"'`
   3. Import it with `agent-browser cookies set` for `http://localhost:3000`, verify an authenticated page, and immediately delete the temporary file.
-- When building frontend UI components and pages, **always** seek to leverage shadcn/ui components as the foundation
+- When building frontend UI components and pages, always seek to leverage shadcn/ui components as the foundation
+- No need to install any new shadcn components... they've all been installed already
 - Never mutate any of the foundational shadcn/ui components inside of `components/ui`
 - If you ever need to run or execute Python, the command is `python3` and not `python`
 - Never write db migrations manually. Instead, modify the db schema in `db/schema/` and then run `pnpm db:generate`.
